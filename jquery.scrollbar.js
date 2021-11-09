@@ -1,25 +1,24 @@
 /**
  * jQuery CSS Customizable Scrollbar
  *
- * Copyright 2015, Yuriy Khabarov
+ * Copyright 2021, Yuriy Khabarov
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
  * If you found bug, please contact me via email <13real008@gmail.com>
  *
  * @author Yuriy Khabarov aka Gromo
- * @version 0.2.11
+ * @version 0.2.12
  * @url https://github.com/gromo/jquery.scrollbar/
  *
  */
 ;
 (function (root, factory) {
-    'use strict';
     if (typeof define === 'function' && define.amd) {
         define(['jquery'], factory);
-    } else if (typeof exports !== 'undefined') {
-        module.exports = factory(require('jquery'));
+    } else if (typeof exports !== "undefined") {
+        factory(require('jquery'));
     } else {
-        factory(jQuery);
+        factory(root.jQuery);
     }
 }(this, function ($) {
     'use strict';
@@ -76,6 +75,10 @@
         onUpdate: null            // callback function on init/resize (before scrollbar size calculation)
     };
 
+    function isFunction(func) {
+        return typeof func === "function";
+    }
+
 
     var BaseScrollbar = function (container) {
 
@@ -84,7 +87,7 @@
             browser.scroll = getBrowserScrollSize();
             updateScrollbars();
 
-            $(window).resize(function () {
+            $(window).on('resize', function () {
                 var forceUpdate = false;
                 if (browser.scroll && (browser.scroll.height || browser.scroll.width)) {
                     var scroll = getBrowserScrollSize();
@@ -139,7 +142,7 @@
 
             $(document).add('body').off(this.namespace);
 
-            if ($.isFunction(this.options.onDestroy)) {
+            if (isFunction(this.options.onDestroy)) {
                 this.options.onDestroy.apply(this, [this.container]);
             }
         },
@@ -165,7 +168,7 @@
                 || (browser.overlay && o.ignoreOverlay)
                 || (browser.macosx && !browser.webkit) // still required to ignore nonWebKit browsers on Mac
                 ) {
-                if ($.isFunction(o.onFallback)) {
+                if (isFunction(o.onFallback)) {
                     o.onFallback.apply(this, [c]);
                 }
                 return false;
@@ -210,7 +213,7 @@
                                 break;
                         }
                     }
-                    if ($.isFunction(o.onScroll)) {
+                    if (isFunction(o.onScroll)) {
                         o.onScroll.call(S, {
                             maxScroll: s.y.maxScrollOffset,
                             scroll: scrollTop,
@@ -264,7 +267,7 @@
                         });
                     }
                 }
-                if ($.isFunction(o.onInit)) {
+                if (isFunction(o.onInit)) {
                     o.onInit.apply(this, [c]);
                 }
             } else {
@@ -478,7 +481,7 @@
             this._updateScroll('x', this.scrollx);
             this._updateScroll('y', this.scrolly);
 
-            if ($.isFunction(o.onUpdate)) {
+            if (isFunction(o.onUpdate)) {
                 o.onUpdate.apply(this, [c]);
             }
 
@@ -665,7 +668,7 @@
         if (typeof args === 'undefined') {
             args = [];
         }
-        if (!$.isArray(args)) {
+        if (!Array.isArray(args)) {
             args = [args];
         }
         this.not('body, .scroll-wrapper').each(function () {
